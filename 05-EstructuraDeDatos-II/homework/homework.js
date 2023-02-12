@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /* EJERCICIO 1
 Implementar la clase LinkedList, definiendo los siguientes métodos:
@@ -10,10 +10,62 @@ Implementar la clase LinkedList, definiendo los siguientes métodos:
   search(isEven), donde isEven es una función que retorna true cuando recibe por parámetro un número par, busca un nodo cuyo valor sea un número par.
   En caso de que la búsqueda no arroje resultados, search debe retornar null.
 */
-function LinkedList() {}
+function LinkedList() {
+  this.head = null;
+}
 
-function Node(value) {}
+function Node(value) {
+  this.value = value;
+  this.next = null;
+}
 
+LinkedList.prototype.add = function (data) {
+  let node = new Node(data);
+  if (!this.head) {
+    this.head = node;
+  } else {
+    let current = this.head;
+    while (current.next) {
+      current = current.next;
+    }
+    current.next = node;
+  }
+};
+
+LinkedList.prototype.remove = function () {
+  if (!this.head) {
+    return null;
+  } else if (!this.head.next) {
+    let value = this.head.value;
+    this.head = null;
+    return value;
+  } else {
+    let current = this.head;
+    while (current.next.next) {
+      current = current.next;
+    }
+    let value = current.next.value;
+    current.next = null;
+    return value;
+  }
+};
+
+LinkedList.prototype.search = function (value) {
+  let current = this.head;
+  while (current) {
+    if (typeof value === "function") {
+      if (value(current.value)) {
+        return current.value;
+      }
+    } else {
+      if (current.value === value) {
+        return current.value;
+      }
+    }
+    current = current.next;
+  }
+  return null;
+};
 /* EJERCICIO 2
 Implementar la clase HashTable.
 Nuetra tabla hash, internamente, consta de un arreglo de buckets (slots, contenedores, o casilleros; es decir, posiciones posibles para almacenar la información), donde guardaremos datos en formato clave-valor (por ejemplo, {instructora: 'Ani'}).
@@ -27,13 +79,59 @@ La clase debe tener los siguientes métodos:
 
 Ejemplo: supongamos que quiero guardar {instructora: 'Ani'} en la tabla. Primero puedo chequear, con hasKey, si ya hay algo en la tabla con el nombre 'instructora'; luego, invocando set('instructora', 'Ani'), se almacenará el par clave-valor en un bucket específico (determinado al hashear la clave)
 */
-function HashTable() {}
+function HashTable() {
+  //constructor las tablas hash
+  this.buckets = [];
+  this.numBuckets = 35;
+  this.size = 0;
+} 
 
+HashTable.prototype.hash = function (key) {
+  //funcion hash
+  let total = 0;
+  if (!typeof key === "string") {
+    throw Error("key must be a string");
+  }
+  for (let i = 0; i < key.length; i++) {
+    total += key.charCodeAt(i);
+  }
+  return total % this.numBuckets;
+};
+
+HashTable.prototype.set = function (key, value) {
+  //funcion set, recibe una clave y un valor, pasa la clave por la funcion hash y guarda el valor en el bucket correspondiente, segun el dato entregado por la funcion hash, si el bucket esta vacio, crea un objeto vacio y guarda el valor en el bucket con la clave correspondiente, si el bucket no esta vacio, guarda el valor en el bucket con la clave correspondiente... envía un error si la clave no es un string....
+  if (typeof key !== "string") {
+    throw new TypeError("key must be a string");
+  } else {
+    let index = this.hash(key);
+    if (this.buckets[index] === undefined) {
+      this.buckets[index] = {};
+    }
+    this.buckets[index][key] = value;
+  }
+};
+
+HashTable.prototype.get = function (key) {
+  //funcion get, recibe una clave y busca el valor que le corresponde en el bucket correcto de la tabla, si el bucket esta vacio, envia false, si el bucket no esta vacio, busca el valor en el bucket con la clave correspondiente... envía un error si la clave no es un string....
+  if (typeof key !== "string") {
+    throw new TypeError("key must be a string");
+  }
+  let index = this.hash(key);
+  return this.buckets[index][key];
+};
+HashTable.prototype.hasKey = function (key) {
+  //funcion hasKey, recibe una clave y consulta si hay algo almacenado en la tabla con esa clave, si el backet no existe, envia false, si el bucket existe, busca la clave en el bucket y envia true si la encuentra, si no la encuentra, envia false... envía un error si la clave no es un string....
+  if (typeof key !== "string") {
+    throw new TypeError("key must be a string");
+  }
+ 
+  return !!this.get(key);
+};
 // No modifiquen nada debajo de esta linea
 // --------------------------------
 
 module.exports = {
-   Node,
-   LinkedList,
-   HashTable,
+  Node,
+  LinkedList,
+  HashTable,
 };

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /*
 Definir las funciones recursivas nFactorial y nFibonacci.
@@ -14,9 +14,48 @@ Secuencia:  0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
 Como ejercicio adicional y completamente opcional, al terminar de resolver este problema pueden intentar definir funciones que logren los mismos resultados pero de manera iterativa.
 */
 
-function nFactorial(n) {}
+function nFactorial(n) {
+  if (n == 0) {
+    return 1;
+  } else if (n < 0) {
+    return "El número no es valido";
+  } else {
+    return n * nFactorial(n - 1);
+    // 5 -->  120
+    // f(5) = 5 * f(4);
+    // f(4) = 4 * f(3);
+    // f(3) = 3 * f(2);
+    // f(2) = 2 * f(1);
+    // f(1) =   1;
+    // f(2) =   2;
+    // f(3) =   6;
+    // f(4) =  24;
+    // f(5) = 120;
+  }
+}
 
-function nFibonacci(n) {}
+function nFibonacci(n) {
+  if (n > -1 && n < 2) {
+    return  Number(n);
+  } else if (n < 0) {
+    return "El número no es valido";
+  } else {
+    return nFibonacci(n - 1) + nFibonacci(n - 2);
+  }
+  // 6 --> 8
+// f(6) = f(5) + f(4);
+// f(5) = f(4) + f(3);
+// f(3) = f(2) + f(1);
+// f(2) = f(1) + f(0);
+// f(1) = 1;
+// f(0) = 0;
+// f(2) = 1 + 0;
+// f(3) = 1 + 1;
+// f(4) = 2 + 1;
+// f(5) = 3 + 2;
+// f(6) = 5 + 3;
+
+}
 
 /*
 Implementar la clase Queue, sabiendo que es una estructura de tipo FIFO, donde el primer elemento que ingresa es el primero que se quita. Definir los siguientes métodos:
@@ -27,11 +66,22 @@ Implementar la clase Queue, sabiendo que es una estructura de tipo FIFO, donde e
 Pueden utilizar class o función constructora.
 */
 
-function Queue() {}
+function Queue() {
+  this.queue = [];
+}
+Queue.prototype.enqueue = function (value) {
+  this.queue.push(value);
+}
+Queue.prototype.dequeue = function () {
+ return this.queue.shift(); // shift ya retona undefined si el array está vacio
+}
+Queue.prototype.size = function () {
+  return this.queue.length;
+}
 
 /*⚠️ No modificar nada debajo de esta línea ⚠️*/
 module.exports = {
-   Queue,
-   nFactorial,
-   nFibonacci,
+  Queue,
+  nFactorial,
+  nFibonacci,
 };
